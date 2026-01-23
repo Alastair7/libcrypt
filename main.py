@@ -1,5 +1,9 @@
+from src.app import LibcryptApp
+
+
 def main():
-    print("Hello from libcrypt!")
+    app = LibcryptApp()
+    app.run()
 
 
 if __name__ == "__main__":
