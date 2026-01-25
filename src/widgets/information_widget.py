@@ -6,6 +6,7 @@ from textual.widget import Widget
 from textual.widgets import RadioButton, RadioSet, Static
 
 
+# TODO: Delete this file once all of the widgets are refactored
 class EnvironmentRadioButton(Widget):
     DEFAULT_CSS = """
     EnvironmentRadioButton {
@@ -17,6 +18,7 @@ class EnvironmentRadioButton(Widget):
             width: auto;
             }
     #radioset-border {
+            layout: horizontal;
             border: solid white;
             height: auto;
             }
