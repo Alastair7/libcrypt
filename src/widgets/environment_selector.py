@@ -43,7 +43,7 @@ class EnvironmentSelector(Container):
                 ("PROD", "prod"),
             ],
             value="dev",
-            prompt="Chose an enviroment",
+            prompt="Environment",
             id="env-select",
         )
 

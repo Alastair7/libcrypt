@@ -1,7 +1,7 @@
 from typing import override
 
 from textual.app import ComposeResult
-from textual.containers import Horizontal
+from textual.containers import Horizontal, Vertical
 from textual.widget import Widget
 from textual.widgets import Static
 from widgets.environment_selector import EnvironmentSelector
@@ -9,30 +9,34 @@ from widgets.environment_selector import EnvironmentSelector
 
 class InformationPane(Widget):
     DEFAULT_CSS = """
-    #horizontal {
-            }
-
     InformationPane {
             border: #2a4f2c;
-            height: 25;
+            max-height: 12;
             }
-    InformationPane > Horizontal > Static {
-            width: 11;
-            border: solid red;
-            align:center top;
+
+    InformationPane Horizontal {
+            align: right bottom;
             }
-    .logo {
-            max-width:19;
-            height: 9;
-            border: red;
+
+    InformationPane Vertical {
+            border: solid white;
+            max-width: 50;
+            }
+
+    InformationPane Horizontal Vertical>Static {
+            border: solid cyan;
+            }
+    #selector {
+            width: 30;
             }
     """
 
     @override
     def compose(self) -> ComposeResult:
         with Horizontal(id="horizontal"):
-            yield Static("Test")
-            yield EnvironmentSelector()
+            with Vertical(id="vertical"):
+                yield EnvironmentSelector(id="selector")
+                yield Static("testai-9999_this_is_a_test_branch")
 
     def on_mount(self) -> None:
         pass
