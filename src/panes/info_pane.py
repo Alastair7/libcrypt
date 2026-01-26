@@ -4,11 +4,14 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal
 from textual.widget import Widget
 from textual.widgets import Static
-from widgets.environment_selector import EnvrionmentSelector
+from widgets.environment_selector import EnvironmentSelector
 
 
 class InformationPane(Widget):
     DEFAULT_CSS = """
+    #horizontal {
+            }
+
     InformationPane {
             border: #2a4f2c;
             height: 25;
@@ -27,10 +30,9 @@ class InformationPane(Widget):
 
     @override
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        with Horizontal(id="horizontal"):
             yield Static("Test")
-            yield EnvrionmentSelector()
-            yield EnvrionmentSelector()
+            yield EnvironmentSelector()
 
     def on_mount(self) -> None:
         pass

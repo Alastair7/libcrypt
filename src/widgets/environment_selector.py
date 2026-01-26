@@ -1,44 +1,40 @@
+from typing import override
 from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Select
 
 
-class EnvrionmentSelector(Container):
+class EnvironmentSelector(Container):
     DEFAULT_CSS = """
-    EnvrionmentSelector {
-        width: 1fr;
-        height: 12;
-        padding: 1 2;
+    EnvironmentSelector {
+        width: 25;
+        height: auto;
         align: right middle;
-        border: solid orange;
     }
-
-    EnvrionmentSelector #env-select {
+       EnvironmentSelector #env-select SelectCurrent {
         width: 1fr;
-        height: 12;
+        background: transparent;
         border: solid yellow;
     }
 
-    EnvrionmentSelector #env-select.dev {
+    EnvironmentSelector #env-select.dev SelectCurrent {
         width: 1fr;
-        height: 12;
         border: solid purple;
     }
 
-    EnvrionmentSelector #env-select.np{
+    EnvironmentSelector #env-select.np SelectCurrent {
         width:1fr;
-        height: 12;
         border: solid orange;
     }
 
-    EnvrionmentSelector #env-select.prod {
+    EnvironmentSelector #env-select.prod SelectCurrent {
         width: 1fr;
-        height: 12;
         border: solid pink;
     }
 
     """
 
+    @override
     def compose(self) -> ComposeResult:
         yield Select(
             options=[
@@ -53,11 +49,15 @@ class EnvrionmentSelector(Container):
 
     def on_select_changed(self, event: Select.Changed) -> None:
         select = event.select
-        select.remove_class("dev", "np", "prod")
+        _ = select.remove_class("dev", "np", "prod")
 
         if event.value == "dev":
-            select.add_class("dev")
+            _ = select.add_class("dev")
         elif event.value == "np":
-            select.add_class("np")
+            _ = select.add_class("np")
         elif event.value == "prod":
-            select.add_class("prod")
+            _ = select.add_class("prod")
+
+    def on_mount(self) -> None:
+        select = self.query_one("#env-select", Select)  # pyright: ignore[reportUnknownVariableType]
+        select.add_class("dev")  # pyright: ignore[reportUnusedCallResult]
