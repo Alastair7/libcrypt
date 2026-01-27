@@ -5,12 +5,14 @@ from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widget import Widget
 from textual.widgets import Label, Static
+from pyfiglet import Figlet
 
 from widgets.environment_selector import EnvironmentSelector
 
 
 class InformationPane(Widget):
     DEFAULT_CSS = """
+    
     InformationPane {
         border: #2a4f2c;
         max-height: 12;
@@ -18,16 +20,18 @@ class InformationPane(Widget):
 
     #vertical {
         width: 30;
-        border: solid red;
+        height:100%;
+        content-align:right middle;
     }
-
+    #horizontal{
+    width:100%;
+    }
     #test {
-        border: solid blue;
-        text-align: center;
-        width: 1fr;
-        height: 3;
-        content-align: center middle;
-    }
+        text-style: bold;
+    color: gray;
+    height: auto;
+    width: 1fr;
+    content-align: center middle;    }
 
     InformationPane Horizontal Vertical > Static {
         border: solid cyan;
@@ -35,6 +39,7 @@ class InformationPane(Widget):
 
     #selector {
         width: 20;
+        height:14;
     }
 
     #logo {
@@ -44,15 +49,16 @@ class InformationPane(Widget):
         border: solid yellow;
     }
     """
+    f = Figlet(font="big")
+    title = f.renderText("LIBCRYPT")
 
     @override
     def compose(self) -> ComposeResult:
         with Horizontal(id="horizontal"):
             yield Static("[LOGO]", id="logo")
-            yield Label("TEST", id="test")
+            yield Label(self.title, id="test")
             with Vertical(id="vertical"):
                 yield EnvironmentSelector(id="selector")
-                yield Static(self.get_git_branch())
 
     def on_mount(self) -> None:
         # Actualiza al montar
