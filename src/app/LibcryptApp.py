@@ -8,7 +8,7 @@ from panes.info_pane import InformationPane
 class LibcryptApp(App):  # pyright: ignore[reportMissingTypeArgument]
     CSS = """
     Screen {
-        background: #191a1c; /* Un gris azulado oscuro (estilo Tokyo Night) */
+        background: #191a1c;
     }
     """
 

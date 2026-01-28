@@ -1,12 +1,12 @@
-import subprocess
 from typing import override
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
 from textual.widget import Widget
 from textual.widgets import Label, Static
-from pyfiglet import Figlet
+from pyfiglet import Figlet, FigletString
 
+from utils.get_git_current_branch import get_git_branch
 from widgets.environment_selector import EnvironmentSelector
 
 
@@ -48,8 +48,8 @@ class InformationPane(Widget):
         border: solid yellow;
     }
     """
-    f = Figlet(font="big")
-    title = f.renderText("LIBCRYPT")
+    figlet: Figlet = Figlet(font="big")
+    title: FigletString = figlet.renderText("LIBCRYPT")
 
     @override
     def compose(self) -> ComposeResult:
@@ -60,20 +60,9 @@ class InformationPane(Widget):
                 yield EnvironmentSelector(id="selector")
 
     def on_mount(self) -> None:
-        # Actualiza al montar
         self.update_branch()
-        # Actualiza cada 5 segundos
-        self.set_interval(5.0, self.update_branch)
+        _ = self.set_interval(5.0, self.update_branch)
 
     def update_branch(self) -> None:
-        branch = self.get_git_branch()
-        self.border_subtitle = f"🌿 {branch}"
-
-    def get_git_branch(self) -> str:
-        try:
-            return subprocess.check_output(
-                ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-                text=True,
-            ).strip()
-        except Exception:
-            return "no-git"
+        current_git_branch: str = get_git_branch()
+        self.border_subtitle: str = f"🌿 {current_git_branch}"

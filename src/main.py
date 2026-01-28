@@ -1,5 +1,9 @@
-from app import LibcryptApp
+from app.LibcryptApp import LibcryptApp
+
+
+def main():
+    LibcryptApp().run()  # pyright: ignore[reportUnusedCallResult]
 
 
 if __name__ == "__main__":
-    LibcryptApp().run()  # pyright: ignore[reportUnusedCallResult]
+    main()
