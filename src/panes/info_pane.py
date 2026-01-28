@@ -12,14 +12,13 @@ from widgets.environment_selector import EnvironmentSelector
 
 class InformationPane(Widget):
     DEFAULT_CSS = """
-    
     InformationPane {
-        border: #2a4f2c;
+        border: #605f61;
         max-height: 12;
     }
 
     #vertical {
-        width: 30;
+        width: 25;
         height:100%;
         content-align:right middle;
     }
@@ -28,7 +27,7 @@ class InformationPane(Widget):
     }
     #test {
         text-style: bold;
-    color: gray;
+    color: #71529c;
     height: auto;
     width: 1fr;
     content-align: center middle;    }
@@ -39,7 +38,7 @@ class InformationPane(Widget):
 
     #selector {
         width: 20;
-        height:14;
+        height:16;
     }
 
     #logo {

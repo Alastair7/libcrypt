@@ -7,31 +7,39 @@ from textual.widgets import Select
 class EnvironmentSelector(Container):
     DEFAULT_CSS = """
     EnvironmentSelector {
-        width: 25;
+        width: 26;
         height: auto;
         align: right middle;
     }
-       EnvironmentSelector #env-select SelectCurrent {
-        width: 1fr;
-        background: transparent;
-        border: solid yellow;
+
+    /* Estilo base del Select */
+    EnvironmentSelector Select {
+        border: none;
     }
 
+    /* Estilo de la caja donde se ve el valor actual */
+    EnvironmentSelector SelectCurrent {
+        background: #16161e;
+        border: tall #3b4261;
+        color: white;
+    }
+
+    /* Variaciones de color por clase */
     EnvironmentSelector #env-select.dev SelectCurrent {
-        width: 1fr;
-        border: solid purple;
+        border: tall #9ece6a; /* Verde para desarrollo */
+        color: #9ece6a;
     }
 
     EnvironmentSelector #env-select.np SelectCurrent {
-        width:1fr;
-        border: solid orange;
+        border: tall #e0af68; /* Naranja para No-Prod */
+        color: #e0af68;
     }
 
     EnvironmentSelector #env-select.prod SelectCurrent {
-        width: 1fr;
-        border: solid pink;
+        border: tall #f7768e; /* Rojo/Rosa para Producción */
+        color: #f7768e;
+        text-style: bold;
     }
-
     """
 
     @override
