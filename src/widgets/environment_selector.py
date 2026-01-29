@@ -12,19 +12,16 @@ class EnvironmentSelector(Container):
         align: right middle;
     }
 
-    /* Estilo base del Select */
     EnvironmentSelector Select {
         border: none;
     }
 
-    /* Estilo de la caja donde se ve el valor actual */
     EnvironmentSelector SelectCurrent {
         background: #16161e;
         border: tall #3b4261;
         color: white;
     }
 
-    /* Variaciones de color por clase */
     EnvironmentSelector #env-select.dev SelectCurrent {
         border: tall #9ece6a; /* Verde para desarrollo */
         color: #9ece6a;
