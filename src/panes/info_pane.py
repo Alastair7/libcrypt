@@ -54,7 +54,14 @@ class InformationPane(Widget):
     @override
     def compose(self) -> ComposeResult:
         with Horizontal(id="horizontal"):
-            yield Static("[LOGO]", id="logo")
+            yield Static(
+                """  ╦  ┬┌┐ ╔═╗┬─┐┬ ┬┌─┐┌┬┐
+  ║  │├┴┐║  ├┬┘└┬┘├─┘ │ 
+  ╩═╝┴└─┘╚═╝┴└─ ┴ ┴   ┴ 
+  ━━━━━━━━━━━━━━━━━━━━━
+   🔐 Script Manager""",
+                id="logo",
+            )
             yield Label(self.title, id="test")
             with Vertical(id="vertical"):
                 yield EnvironmentSelector(id="selector")
