@@ -2,7 +2,6 @@ from typing import override
 
 from textual.app import ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.geometry import Offset
 from textual.widget import Widget
 from textual.widgets import Label, Static
 from pyfiglet import Figlet, FigletString
