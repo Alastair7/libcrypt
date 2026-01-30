@@ -9,6 +9,16 @@ from pyfiglet import Figlet, FigletString
 from utils.get_git_current_branch import get_git_branch
 from widgets.environment_selector import EnvironmentSelector
 
+APP_LOGO: str = """          @@@@@          
+       @@       @@       
+     @@   </>   @@     
+   @@@   .py~~   @@@   
+   @@@   .sh~~   @@@   
+     @@   ~~~   @@     
+       @@       @@       
+          @@@@@          
+"""
+
 
 class InformationPane(Widget):
     DEFAULT_CSS = """
@@ -43,9 +53,10 @@ class InformationPane(Widget):
 
     #logo {
         width: 30;
+        color: white;
         height: 10;
         content-align: center middle;
-        border: solid yellow;
+        border: round gray;
     }
     """
     figlet: Figlet = Figlet(font="big")
@@ -54,7 +65,7 @@ class InformationPane(Widget):
     @override
     def compose(self) -> ComposeResult:
         with Horizontal(id="horizontal"):
-            yield Static("[LOGO]", id="logo")
+            yield Static(id="logo", content=APP_LOGO)
             yield Label(self.title, id="test")
             with Vertical(id="vertical"):
                 yield EnvironmentSelector(id="selector")
