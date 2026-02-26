@@ -1,15 +1,9 @@
-import os
-import subprocess
-from typing import Any, override
+from typing import override
 from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Select
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SCRIPT_PATH = os.path.abspath(
-    os.path.join(BASE_DIR, "..", "scripts", "load_variables_by_environment.sh")
-)
-env_vars: dict[str, Any] = {}
+from utils import variables_loader
 
 
 class EnvironmentSelector(Container):
@@ -64,19 +58,11 @@ class EnvironmentSelector(Container):
         select = event.select
         _ = select.remove_class("dev", "np", "prod")
 
-        script_result = subprocess.run(
-            [SCRIPT_PATH, str(event.value)], capture_output=True, text=True, check=True
-        )
-
-        for line in script_result.stdout.splitlines():
-            if "=" in line:
-                key, value = line.split("=", 1)
-                env_vars[key] = value
-                os.environ[key] = value
+        env_loaded = variables_loader.load_environment_variables(str(event.value))
 
         _ = select.add_class(str(event.value))
 
-        if script_result.returncode != 0:
+        if not env_loaded:
             self.notify(
                 f"Error while loading {str(event.value).upper()} environment...",
                 severity="error",
