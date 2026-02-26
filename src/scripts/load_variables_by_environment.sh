@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# This script exports into PATH the environment variables of appconfig.yaml
-
 if [ $# -eq 0 ]; then
    echo "Missing argument: env is required to load"
+   exit 1
 fi
 
 env=${1,,}
@@ -17,8 +16,13 @@ case "$env" in
       ;;
 esac
 
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+APP_CONFIG="$SCRIPT_DIR/../../appconfig.yml"
+
 while IFS='=' read -r key value; do
-   export "$key=$value"
+   echo "$key=$value"
 done < <(
-   yq '.app.environment_variables.dev | to_entries | .[] | "\(.key)=\(.value)"' ../../appconfig.yml
+   yq ".app.environment_variables.$env | to_entries | .[] | \"\(.key)=\(.value)\"" "$APP_CONFIG"
 )
+
+exit 0

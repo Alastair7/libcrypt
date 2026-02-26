@@ -1,7 +1,15 @@
-from typing import override
+import os
+import subprocess
+from typing import Any, override
 from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Select
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_PATH = os.path.abspath(
+    os.path.join(BASE_DIR, "..", "scripts", "load_variables_by_environment.sh")
+)
+env_vars: dict[str, Any] = {}
 
 
 class EnvironmentSelector(Container):
@@ -56,12 +64,27 @@ class EnvironmentSelector(Container):
         select = event.select
         _ = select.remove_class("dev", "np", "prod")
 
-        if event.value == "dev":
-            _ = select.add_class("dev")
-        elif event.value == "np":
-            _ = select.add_class("np")
-        elif event.value == "prod":
-            _ = select.add_class("prod")
+        script_result = subprocess.run(
+            [SCRIPT_PATH, str(event.value)], capture_output=True, text=True, check=True
+        )
+
+        for line in script_result.stdout.splitlines():
+            if "=" in line:
+                key, value = line.split("=", 1)
+                env_vars[key] = value
+                os.environ[key] = value
+
+        _ = select.add_class(str(event.value))
+
+        if script_result.returncode != 0:
+            self.notify(
+                f"Error while loading {str(event.value).upper()} environment...",
+                severity="error",
+            )
+
+        self.notify(
+            f"{str(event.value).upper()} environment has been loaded succesfully!"
+        )
 
     def on_mount(self) -> None:
         select = self.query_one("#env-select", Select)  # pyright: ignore[reportUnknownVariableType]
