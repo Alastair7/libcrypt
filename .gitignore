@@ -57,3 +57,8 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# --------------------------------------------------
+# LibCrypt ignored files 
+# --------------------------------------------------
+appconfig.yaml
+appconfig.yml

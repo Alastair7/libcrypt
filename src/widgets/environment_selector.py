@@ -3,6 +3,8 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Select
 
+from utils import variables_loader
+
 
 class EnvironmentSelector(Container):
     DEFAULT_CSS = """
@@ -56,12 +58,19 @@ class EnvironmentSelector(Container):
         select = event.select
         _ = select.remove_class("dev", "np", "prod")
 
-        if event.value == "dev":
-            _ = select.add_class("dev")
-        elif event.value == "np":
-            _ = select.add_class("np")
-        elif event.value == "prod":
-            _ = select.add_class("prod")
+        env_loaded = variables_loader.load_environment_variables(str(event.value))
+
+        _ = select.add_class(str(event.value))
+
+        if not env_loaded:
+            self.notify(
+                f"Error while loading {str(event.value).upper()} environment...",
+                severity="error",
+            )
+
+        self.notify(
+            f"{str(event.value).upper()} environment has been loaded succesfully!"
+        )
 
     def on_mount(self) -> None:
         select = self.query_one("#env-select", Select)  # pyright: ignore[reportUnknownVariableType]
