@@ -1,24 +1,16 @@
 import os
-import subprocess
+from typing import Any
+import yaml
+
+from constants import ROOT_PATH
 
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SCRIPT_PATH = os.path.abspath(
-    os.path.join(BASE_DIR, "..", "scripts", "load_variables_by_environment.sh")
-)
+APPCONFIG_PATH = ROOT_PATH / "appconfig.yml"
 
 
-def load_environment_variables(environment: str) -> bool:
-    result = subprocess.run(
-        [SCRIPT_PATH, environment], capture_output=True, text=True, check=True
-    )
+def load_environment_variables(environment: str) -> None:
+    appconfig = yaml.safe_load((ROOT_PATH / "appconfig.yml").read_text())
+    variables: dict[str, Any] = appconfig["environment_variables"][environment.lower()]
 
-    if result.returncode != 0:
-        return False
-
-    for line in result.stdout.splitlines():
-        if "=" in line:
-            key, value = line.split("=", 1)
-            os.environ[key] = value
-
-    return True
+    for key, val in variables.items():
+        os.environ[key] = val

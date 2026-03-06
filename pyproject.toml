@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "click==8.3.1",
     "pyfiglet==1.0.4",
+    "pyyaml>=6.0.3,<6.1.0",
     "textual==7.3.0",
 ]
 
@@ -15,6 +16,7 @@ libcrypt = "main:main"
 
 [tool.uv]
 package = true
+add-bounds = "minor"
 
 [build-system]
 requires = ["setuptools>=68"]
@@ -25,6 +27,9 @@ package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.basedpyright]
+reportUnusedCallResult = false
 
 [dependency-groups]
 dev = [

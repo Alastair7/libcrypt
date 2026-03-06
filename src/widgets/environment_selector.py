@@ -56,22 +56,13 @@ class EnvironmentSelector(Container):
 
     def on_select_changed(self, event: Select.Changed) -> None:
         select = event.select
-        _ = select.remove_class("dev", "np", "prod")
 
-        env_loaded = variables_loader.load_environment_variables(str(event.value))
+        select.remove_class("dev", "np", "prod")
+        variables_loader.load_environment_variables(str(event.value))
+        select.add_class(str(event.value))
 
-        _ = select.add_class(str(event.value))
-
-        if not env_loaded:
-            self.notify(
-                f"Error while loading {str(event.value).upper()} environment...",
-                severity="error",
-            )
-
-        self.notify(
-            f"{str(event.value).upper()} environment has been loaded succesfully!"
-        )
+        self.notify(f"{str(event.value).upper()} environment has been loaded.")
 
     def on_mount(self) -> None:
         select = self.query_one("#env-select", Select)  # pyright: ignore[reportUnknownVariableType]
-        select.add_class("dev")  # pyright: ignore[reportUnusedCallResult]
+        select.add_class("dev")
