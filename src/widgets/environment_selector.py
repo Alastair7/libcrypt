@@ -57,7 +57,11 @@ class EnvironmentSelector(Container):
     def on_select_changed(self, event: Select.Changed) -> None:
         select = event.select
 
+        if select.is_blank():
+            return
+
         select.remove_class("dev", "np", "prod")
+
         variables_loader.load_environment_variables(str(event.value))
         select.add_class(str(event.value))
 
