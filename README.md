@@ -13,9 +13,9 @@ Before running LibCrypt it is required to add the enviroment variables (if they 
 Create a file named `appconfig.yaml` and use the structure below to implement the app configuration.
 If you don't use any enviroment variables you can set it as `environment_variables: {}`
 ```yaml
-app:
-  scripts_path: path/to/scripts/dir
-  environment_variables:
+
+scripts_path: absolute_path/to/scripts/dir
+environment_variables:
     dev:
        VARIABLE1: VALUE 
        VARIABLE2: VALUE

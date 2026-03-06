@@ -2,7 +2,7 @@ from app.LibcryptApp import LibcryptApp
 
 
 def main():
-    LibcryptApp().run()  # pyright: ignore[reportUnusedCallResult]
+    LibcryptApp().run()
 
 
 if __name__ == "__main__":
