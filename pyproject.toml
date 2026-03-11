@@ -18,6 +18,9 @@ libcrypt = "main:main"
 package = true
 add-bounds = "minor"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
