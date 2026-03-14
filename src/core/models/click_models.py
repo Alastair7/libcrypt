@@ -4,8 +4,9 @@ from dataclasses import dataclass
 @dataclass
 class ClickCommandOption:
     name: str
-    default: str
-    help: str
+    default: str | None = None
+    help: str | None = None
+    required: bool = False
 
 
 @dataclass
@@ -19,14 +20,3 @@ class ClickCommand:
     name: str
     args: list[ClickCommandArgument]
     options: list[ClickCommandOption]
-
-
-class ClickScriptParser:
-    def __init__(self, content: str):
-        self.content: str = content
-
-    def extract_commands(self) -> list[ClickCommand]:
-        # command name
-        # arguments
-        # options
-        return []

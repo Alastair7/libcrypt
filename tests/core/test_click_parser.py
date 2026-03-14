@@ -1,5 +1,7 @@
-from core.click_parser import ClickCommand, ClickCommandArgument, ClickScriptParser
 import pytest
+
+from core.click_parser import ClickScriptParser
+from core.models.click_models import ClickCommand, ClickCommandArgument
 
 
 @pytest.fixture
@@ -30,18 +32,10 @@ if __name__ == "__main__":
 """
 
 
-def test_parse_script_should_return_empty(fake_click_script: str):
-    parser = ClickScriptParser(fake_click_script)
-
-    commands = parser.extract_commands()
-
-    assert commands == []
-
-
 def test_parse_script_should_return_existing_commands(fake_click_script: str):
     parser = ClickScriptParser(fake_click_script)
 
-    commands = parser.extract_commands()
+    commands = parser.get_commands()
 
     assert commands == [
         ClickCommand(

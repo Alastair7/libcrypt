@@ -1,7 +1,7 @@
 import pytest
 
-from core.click_parser import ClickCommandArgument
-from utils.click_helper import extract_arguments, extract_commands
+from core.models.click_models import ClickCommandArgument, ClickCommandOption
+from utils.click_helper import extract_arguments, extract_commands, extract_options
 
 
 @pytest.fixture
@@ -17,7 +17,8 @@ def main():
 
 @main.command("test")
 @click.argument("text")
-def test_script(text: str):
+@click.option("--plan, default="Hello"")
+def test_script(text: str, plan: str):
     click.echo(f"Hello {text}")
 
 
@@ -76,3 +77,9 @@ def test_extract_arguments_from_command(fake_click_script: str):
     arguments = extract_arguments(script_body=fake_click_script, command_name="test")
 
     assert arguments == [ClickCommandArgument("text", "str")]
+
+
+def test_extract_options_from_command(fake_click_script: str):
+    options = extract_options(script_body=fake_click_script, command_name="test")
+
+    assert options == [ClickCommandOption(name="plan", default="Hello", help=None)]

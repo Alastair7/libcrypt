@@ -1,6 +1,6 @@
 import re
 
-from core.click_parser import ClickCommandArgument
+from core.models.click_models import ClickCommandArgument, ClickCommandOption
 
 
 def extract_commands(script_body: str) -> list[str]:
@@ -47,6 +47,33 @@ def extract_arguments(
     ]
 
 
+def extract_options(script_body: str, command_name: str) -> list[ClickCommandOption]:
+    command_pattern = re.compile(rf"@\w+\.command\(['\"]{command_name}['\"]\)")
+    function_pattern = re.compile(r"def\s+\w+([^\)]*)\)")
+
+    command = command_pattern.search(script_body)
+
+    if not command:
+        raise ValueError("Command not found")
+
+    start_pos = command.end()
+    func_match = function_pattern.search(script_body[start_pos:])
+
+    if not func_match:
+        raise ValueError("Function not found")
+
+    end_pos = start_pos + func_match.start()
+
+    command_section = script_body[start_pos:end_pos]
+
+    options_pattern = re.compile(r"@click\.option\(([^\)]*)\)")
+    options_found: list[str] = options_pattern.findall(command_section)
+
+    options = [option[3:].strip('"') for option in options_found]
+    extracted_options = _extract_options_from_body(options)
+    return extracted_options
+
+
 def _extract_function_types(
     script_body: str, func_match: re.Match[str], start_pos: int
 ) -> dict[str, str]:
@@ -64,12 +91,34 @@ def _extract_function_types(
         raise ValueError("Match error")
 
     args_group = func_args_result.group(1)
-    args = args_group.strip().split(",")
+    args = args_group.strip('"').split(",")
 
     for arg in args:
+        if not arg:
+            continue
+
         key = arg.split(":")[0].strip()
         value = arg.split(":")[1].strip()
 
         result[key] = value
 
     return result
+
+
+def _extract_options_from_body(option_bodies: list[str]):
+    options: list[ClickCommandOption] = []
+    for option_body in option_bodies:
+        parts = [p.strip() for p in option_body.split(",")]
+        options.append(_build_option_from_args(parts))
+    return options
+
+
+def _build_option_from_args(option_args: list[str]) -> ClickCommandOption:
+    name = option_args.pop(0)
+    kwargs = {}
+
+    for arg in option_args:
+        key, value = arg.split("=", 1)
+        kwargs[key.strip()] = value.strip('"')
+
+    return ClickCommandOption(name=name, **kwargs)  # pyright: ignore[reportUnknownArgumentType]
