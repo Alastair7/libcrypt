@@ -7,7 +7,7 @@ from textual.widget import Widget
 from textual.widgets import DirectoryTree
 
 from widgets.directory_tree import CategoriesTree
-from widgets.ScriptsPanel import ScriptsPanel
+from widgets.script_panel import ScriptPanel
 
 
 class TreePane(Widget):
@@ -34,10 +34,10 @@ class TreePane(Widget):
     def compose(self) -> ComposeResult:
         with Horizontal(id="horizontal"):
             yield CategoriesTree(id="tree-container")
-            yield ScriptsPanel(id="content")
+            yield ScriptPanel(id="content")
 
     def on_directory_tree_file_selected(self, event: DirectoryTree.FileSelected) -> None:
         path = Path(str(event.path))
         if path.suffix == ".py":
-            panel = self.query_one(ScriptsPanel)
+            panel = self.query_one(ScriptPanel)
             panel.show_script(path)
