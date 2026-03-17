@@ -46,7 +46,9 @@ class ParamInput(Container):
 
     @override
     def compose(self) -> ComposeResult:
-        type_hint = f" ({self.param.param_type})" if self.param.param_type != "str" else ""
+        type_hint = (
+            f" ({self.param.param_type})" if self.param.param_type != "str" else ""
+        )
 
         yield Label(f"{self.param.name}{type_hint}:")
         yield Input(
@@ -214,7 +216,9 @@ class ScriptsPanel(Container):
 
             if self.script_params:
                 content = path.read_text("utf-8")
-                func_name = content.split("def ")[1].split("(")[0] if "def " in content else ""
+                func_name = (
+                    content.split("def ")[1].split("(")[0] if "def " in content else ""
+                )
 
                 if func_name:
                     wrapper = (

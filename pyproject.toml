@@ -33,6 +33,7 @@ where = ["src"]
 
 [tool.basedpyright]
 reportUnusedCallResult = false
+reportUnannotatedClassAttribute = false
 
 [dependency-groups]
 dev = [
