@@ -36,8 +36,11 @@ class TreePane(Widget):
             yield CategoriesTree(id="tree-container")
             yield ScriptPanel(id="content")
 
-    def on_directory_tree_file_selected(self, event: DirectoryTree.FileSelected) -> None:
+    def on_directory_tree_file_selected(
+        self, event: DirectoryTree.FileSelected
+    ) -> None:
         path = Path(str(event.path))
         if path.suffix == ".py":
             panel = self.query_one(ScriptPanel)
             panel.show_script(path)
+
