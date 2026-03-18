@@ -17,9 +17,9 @@ def main():
 
 @main.command("test")
 @click.argument("text")
-@click.option("--plan, default="Hello"")
-def test_script(text: str, plan: str):
-    click.echo(f"Hello {text}")
+@click.option("--hello", default="Hey!", required=True)
+def test_script(text: str, hello: str):
+    click.echo(f"{hello} {text}")
 
 
 @main.command("random")
@@ -29,7 +29,6 @@ def random_script():
 
 if __name__ == "__main__":
     main()
-
 """
 
 
@@ -82,4 +81,8 @@ def test_extract_arguments_from_command(fake_click_script: str):
 def test_extract_options_from_command(fake_click_script: str):
     options = extract_options(script_body=fake_click_script, command_name="test")
 
-    assert options == [ClickCommandOption(name="plan", default="Hello", help=None)]
+    print("OPTIONS", options)
+
+    assert options == [
+        ClickCommandOption(name="--hello", default="Hey!", required=True, help=None)
+    ]

@@ -48,29 +48,28 @@ def extract_arguments(
 
 
 def extract_options(script_body: str, command_name: str) -> list[ClickCommandOption]:
-    command_pattern = re.compile(rf"@\w+\.command\(['\"]{command_name}['\"]\)")
-    function_pattern = re.compile(r"def\s+\w+([^\)]*)\)")
+    command_pattern = re.compile(
+        rf"@\w+\.command\(['\"]{re.escape(command_name)}['\"]\)"
+    )
+    function_pattern = re.compile(r"def\s+\w+\s*\(")
 
     command = command_pattern.search(script_body)
-
     if not command:
         raise ValueError("Command not found")
 
     start_pos = command.end()
-    func_match = function_pattern.search(script_body[start_pos:])
 
+    func_match = function_pattern.search(script_body[start_pos:])
     if not func_match:
         raise ValueError("Function not found")
 
     end_pos = start_pos + func_match.start()
-
     command_section = script_body[start_pos:end_pos]
 
-    options_pattern = re.compile(r"@click\.option\(([^\)]*)\)")
+    options_pattern = re.compile(r"@click\.option\((.*?)\)", re.DOTALL)
     options_found: list[str] = options_pattern.findall(command_section)
 
-    options = [option[3:].strip('"') for option in options_found]
-    extracted_options = _extract_options_from_body(options)
+    extracted_options = _extract_options_from_body(options_found)
     return extracted_options
 
 
@@ -86,39 +85,47 @@ def _extract_function_types(
     function_body = script_body[func_start:func_end]
 
     func_args_result = func_args_pattern.search(function_body)
-
     if not func_args_result:
         raise ValueError("Match error")
 
     args_group = func_args_result.group(1)
-    args = args_group.strip('"').split(",")
+    args = [a.strip() for a in args_group.split(",") if a.strip()]
 
     for arg in args:
-        if not arg:
+        if ":" not in arg:
             continue
-
-        key = arg.split(":")[0].strip()
-        value = arg.split(":")[1].strip()
-
-        result[key] = value
+        key, value = arg.split(":", 1)
+        result[key.strip()] = value.strip()
 
     return result
 
 
 def _extract_options_from_body(option_bodies: list[str]):
     options: list[ClickCommandOption] = []
-    for option_body in option_bodies:
-        parts = [p.strip() for p in option_body.split(",")]
-        options.append(_build_option_from_args(parts))
+
+    name_pattern = re.compile(r"""['"]\s*(--[a-zA-Z0-9_-]+)\s*['"]""")
+    kwarg_pattern = re.compile(r"(\w+)\s*=\s*([^,]+)")
+
+    for body in option_bodies:
+        name_match = name_pattern.search(body)
+        if not name_match:
+            continue
+        name = name_match.group(1)
+
+        kwargs: dict[str, object] = {}
+
+        for key, value in kwarg_pattern.findall(body):
+            value = value.strip()
+
+            if value in ("True", "False"):
+                parsed_value = value == "True"
+            elif value.startswith(("'", '"')) and value.endswith(("'", '"')):
+                parsed_value = value[1:-1]
+            else:
+                parsed_value = value
+
+            kwargs[key] = parsed_value
+
+        options.append(ClickCommandOption(name=name, **kwargs))  # pyright: ignore[reportArgumentType]
+
     return options
-
-
-def _build_option_from_args(option_args: list[str]) -> ClickCommandOption:
-    name = option_args.pop(0)
-    kwargs = {}
-
-    for arg in option_args:
-        key, value = arg.split("=", 1)
-        kwargs[key.strip()] = value.strip('"')
-
-    return ClickCommandOption(name=name, **kwargs)  # pyright: ignore[reportUnknownArgumentType]

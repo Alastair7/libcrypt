@@ -1,7 +1,7 @@
 import pytest
 
-from core.click_parser import ClickScriptParser
 from core.models.click_models import ClickCommand, ClickCommandArgument
+from core.parsers.click_parser import ClickScriptParser
 
 
 @pytest.fixture

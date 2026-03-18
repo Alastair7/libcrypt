@@ -52,11 +52,11 @@ class ScriptPanel(Container):
     def on_select_changed(self, event: Select.Changed) -> None:
         if event.select.id != "command-select" or event.value == Select.BLANK:
             return
-        
+
         new_command = str(event.value)
         if new_command == self.selected_command:
-            return  
-        
+            return
+
         self.selected_command = new_command
         self._render_current_command()
 
@@ -81,7 +81,7 @@ class ScriptPanel(Container):
     ) -> None:
         container = self.query_one("#params-container", Vertical)
         container.remove_children()
-        
+
         if not arguments and not options:
             container.mount(Static("No parameters required"))
             return
@@ -94,7 +94,7 @@ class ScriptPanel(Container):
             value = "" if default is None else str(default)
             container.mount(
                 Input(
-                    placeholder=f"option: --{opt.name}",
+                    placeholder=f"option:{opt.name}",
                     value=value,
                     id=f"opt-{opt.name}",
                 )
@@ -119,7 +119,7 @@ class ScriptPanel(Container):
             widget = container.query_one(f"#opt-{opt.name}", Input)
             value = widget.value.strip() if widget else ""
             if value:
-                cmd.extend([f"--{opt.name}", value])
+                cmd.extend([f"{opt.name}", value])
 
         # arguments
         for arg in self.current_arguments:
